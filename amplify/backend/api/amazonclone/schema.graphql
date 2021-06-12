@@ -1,0 +1,53 @@
+type Mutation {
+  createPaymentIntent(amount: Int!): PaymentIntent! @function(name: "createPaymentIntent-${env}")
+}
+
+type PaymentIntent {
+  clientSecret: String!
+}
+
+
+type Product @model @auth(rules: [{ allow: public}]){
+  id: ID!
+  title: String!
+  description: String
+  image: String!
+  images:[String!]!
+  options: [String!]
+  avgRating: Float
+  ratings: Int
+  oldPrice: Float
+  price: Float!
+}
+
+type CartProduct @model @auth(rules: [{ allow: public}]){
+  id: ID!
+  quantity: Int!
+  option: String
+  userSub: String!
+  productID: ID!
+  product: Product @connection(fields: ["productID"])
+}
+
+type OrderProduct @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  quantity: Int!
+  option: String
+  
+  productID: ID!
+  product: Product @connection(fields: ["productID"])
+
+  orderID: ID!
+  order: Order @connection(fields: ["orderID"])
+}
+
+type Order @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  userSub: String!
+
+  name: String!
+  phone: String
+  country: String
+  city: String
+  addRess: String
+}
